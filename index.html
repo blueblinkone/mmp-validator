@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMP Validator - Validador de Documentos MMP</title>
+    <meta name="description" content="Aplicación profesional para validar documentos .mmp contra el esquema XSD">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <h1>MMP Validator</h1>
+            </div>
+            <div class="header-info">
+                <span class="version">v1.0</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-card" id="dropZone">
+                    <div class="upload-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M7 18C4.23858 18 2 15.7614 2 13C2 10.2386 4.23858 8 7 8C7.33333 5.33333 9.66667 3 13 3C16.3333 3 18.6667 5.33333 19 8C21.7614 8 24 10.2386 24 13C24 15.7614 21.7614 18 19 18H7Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M12 12V21M12 12L9 15M12 12L15 15" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h2 class="upload-title">Arrastra tus archivos .mmp aquí</h2>
+                    <p class="upload-subtitle">o usa el botón para seleccionar (puedes seleccionar varios)</p>
+                    <input type="file" id="fileInput" accept=".mmp,.xml" multiple hidden>
+                    <button class="btn-primary" id="selectFileBtn">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9 13H15M12 10V16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Seleccionar Archivos
+                    </button>
+                </div>
+
+                <!-- File List -->
+                <div class="file-list-container" id="fileListContainer" style="display: none;">
+                    <div class="file-list-header">
+                        <h3 id="fileCount">0 archivos seleccionados</h3>
+                        <button class="btn-clear-all" id="clearAllBtn">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Limpiar todo
+                        </button>
+                    </div>
+                    <div class="file-list" id="fileList">
+                        <!-- File items will be injected by JS -->
+                    </div>
+                    <button class="btn-validate" id="validateBtn">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Validar Todos
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-card">
+                    <div class="results-header">
+                        <div class="status-icon" id="statusIcon">
+                            <!-- Icon will be injected by JS -->
+                        </div>
+                        <div class="results-title">
+                            <h2 id="resultsTitle">Resultados de Validación</h2>
+                            <p id="resultsSubtitle">Procesando...</p>
+                        </div>
+                    </div>
+
+                    <div class="results-body" id="resultsBody">
+                        <!-- Results will be injected by JS -->
+                    </div>
+
+                    <div class="results-actions">
+                        <button class="btn-secondary" id="resetBtn">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M4 4V9H4.58152M19.9381 11C19.446 7.05369 16.0796 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9M4.58152 9H9M20 20V15H19.4185M19.4185 15C18.2317 17.9318 15.3574 20 12 20C7.92038 20 4.55399 16.9463 4.06189 13M19.4185 15H15"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Validar otro archivo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schema Info -->
+            <section class="schema-info">
+                <div class="info-card">
+                    <h3>
+                        <svg class="info-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 16V12M12 8H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Acerca del Validador
+                    </h3>
+                    <p>Este validador verifica que tus documentos .mmp cumplan con el esquema XSD definido. Soporta:</p>
+                    <ul class="feature-list">
+                        <li>
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Polígonos, puntos y capas de imagen
+                        </li>
+                        <li>
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Grupos y configuraciones de estilo
+                        </li>
+                        <li>
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Validación completa de tipos y restricciones
+                        </li>
+                    </ul>
+                    <a href="mmp.xsd" download class="btn-download">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M7 10L12 15M12 15L17 10M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Descargar Esquema XSD
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 MMP Validator. Validación profesional de documentos MMP.</p>
+            <p class="developer-credit">Desarrollado por <a href="https://blueblinkone.com" target="_blank" rel="noopener noreferrer"><strong>Blue Blink One</strong></a></p>
+        </footer>
+    </div>
+
+    <script src="xsd-parser.js?v=24"></script>
+    <script src="validator.js?v=24"></script>
+</body>
+
+</html>
