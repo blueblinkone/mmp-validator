@@ -284,6 +284,7 @@
       </xs:sequence>
 
       <!-- Optional Root Attributes -->
+      <xs:attribute name="id" type="xs:string" use="optional"/>
       <xs:attribute name="creator" type="xs:string" use="optional"/>
       <xs:attribute name="date" type="xs:string" use="optional"/>
       <xs:attribute name="project" type="xs:string" use="optional"/>
