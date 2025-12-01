@@ -401,8 +401,10 @@ function validateAgainstComplexType(element, typeName, schema, errors, path = ''
                             return;
                         }
 
-                        // Validate type
-                        if (subElemDef.type) {
+                        // Validate type (check inlineType first, then named type)
+                        if (subElemDef.inlineType) {
+                            validateValue(subValue, subElemDef.inlineType, errors, subChildPath, subElemName, xmlString);
+                        } else if (subElemDef.type) {
                             const subSimpleType = schema.simpleTypes[subElemDef.type];
                             if (subSimpleType) {
                                 validateValue(subValue, subSimpleType, errors, subChildPath, subElemName, xmlString);
@@ -502,9 +504,10 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
         }
     }
 
-    // Validate pattern
+    // Validate pattern (XSD patterns are implicitly anchored to match the entire string)
     if (restrictions.pattern) {
-        const regex = new RegExp(restrictions.pattern);
+        const anchoredPattern = `^${restrictions.pattern}$`;
+        const regex = new RegExp(anchoredPattern);
         if (!regex.test(value)) {
             errors.push({
                 type: 'Formato Inválido',
