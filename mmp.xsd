@@ -35,7 +35,7 @@
 
   <xs:simpleType name="AreaTransparencyType">
     <xs:restriction base="xs:integer">
-      <xs:minInclusive value="1"/>
+      <xs:minInclusive value="1"/> <!-- Cambiar a 0 ? -->
       <xs:maxInclusive value="10"/>
     </xs:restriction>
   </xs:simpleType>
