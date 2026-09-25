@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   MMP Schema Definition
-  
+
   Blue Blink One
   https://blueblinkone.com
-  
+
   This schema is public and free to use.
+
+  Revision 2 (Measure Map Online, 2026): additions only, all optional, so every
+  file valid under revision 1 is valid here.
+   - POLYGON, POINT, SPOT, GROUP: optional `id` attribute.
+   - POLYGON: FILLOPACITY, LINEWIDTHPX, LINESTYLENAME (exact values beside the
+     rounded AREATRANSPARENCY / LINEWIDTH / LINESTYLE), SHOWPINSWHENUNLOCKED,
+     SHOWPRICELABEL, ISBUFFER, PARENTID, PRODUCTID, TEXTUREROTATION,
+     ALTITUDEMODE3D, ALTITUDE3D, EXTRUDED3D, PARCELPROVIDERID, PARCELREFERENCE,
+     PARCELEXTRAINFO.
+   - POINT: ALT3D. SPOT: ALT3D, PRODUCTID. GROUP: SHOWBOUNDS.
+   - Root: LAYER (reference and MBTiles layers) and PROJECT (settings) after
+     GROUPS; optional projectId / projectName attributes.
+   - LINESTYLE 0-5 (5 = dash-dot), AREATRANSPARENCY 0-10 (0 = opaque): values
+     already written in practice.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
@@ -35,15 +49,36 @@
 
   <xs:simpleType name="AreaTransparencyType">
     <xs:restriction base="xs:integer">
-      <xs:minInclusive value="1"/> <!-- Cambiar a 0 ? -->
+      <xs:minInclusive value="0"/> <!-- 0 = fully opaque fill -->
       <xs:maxInclusive value="10"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="OpacityType">
     <xs:restriction base="xs:float">
       <xs:minInclusive value="0.0"/>
       <xs:maxInclusive value="1.0"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LineStyleNameType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="solid"/>
+      <xs:enumeration value="dashed"/>
+      <xs:enumeration value="dotted"/>
+      <xs:enumeration value="dashed_filled"/>
+      <xs:enumeration value="dotted_filled"/>
+      <xs:enumeration value="dash_dot"/>
+      <xs:enumeration value="dash_dot_dot"/>
+      <xs:enumeration value="dash_dash_dot"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LayerKindType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="image_overlay"/>
+      <xs:enumeration value="mbtiles"/>
+      <xs:enumeration value="vector"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -114,7 +149,9 @@
       <xs:element name="ALT" type="xs:float" minOccurs="0"/>
       <xs:element name="DESCPOINT" type="PointDescType" minOccurs="0"/>
       <xs:element name="PICTURES" type="PicturesContainerType" minOccurs="0"/>
+      <xs:element name="ALT3D" type="xs:float" minOccurs="0"/>
     </xs:all>
+    <xs:attribute name="id" type="xs:string" use="optional"/>
   </xs:complexType>
 
   <!-- GROUP Structure -->
@@ -132,7 +169,9 @@
         </xs:simpleType>
       </xs:element>
       <xs:element name="GROUPCUSTOMCOLOR" type="HexColorType" minOccurs="0"/>
+      <xs:element name="SHOWBOUNDS" type="BinaryFlag" minOccurs="0"/>
     </xs:all>
+    <xs:attribute name="id" type="xs:string" use="optional"/>
   </xs:complexType>
 
   <!-- POLYGON Structure -->
@@ -170,7 +209,7 @@
         <xs:simpleType>
           <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
-            <xs:maxInclusive value="4"/>
+            <xs:maxInclusive value="5"/> <!-- 5 = dash-dot -->
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
@@ -188,17 +227,34 @@
       <xs:element name="SHOWLABELBACKGROUND" type="BinaryFlag"/>
       <xs:element name="SHOWAREAMEASURE" type="BinaryFlag"/>
       <xs:element name="SHOWPERIMETERMEASURE" type="BinaryFlag"/>
-      
+
       <xs:element name="COORDINATEPOLYGONLABELLATITUDE" type="LatitudeType"/>
-      <xs:element name="COORDINATEPOLYGONLABELLONGITUDE" type="LongitudeType"/>  
-      <xs:element name="COORDINATEPERIMETERLABELLATITUDE" type="LatitudeType"/>    
-      <xs:element name="COORDINATEPERIMETERLABELLONGITUDE" type="LongitudeType"/>      
+      <xs:element name="COORDINATEPOLYGONLABELLONGITUDE" type="LongitudeType"/>
+      <xs:element name="COORDINATEPERIMETERLABELLATITUDE" type="LatitudeType"/>
+      <xs:element name="COORDINATEPERIMETERLABELLONGITUDE" type="LongitudeType"/>
       <xs:element name="COORDINATEAREALABELLATITUDE" type="LatitudeType"/>
       <xs:element name="COORDINATEAREALABELLONGITUDE" type="LongitudeType"/>
 
       <xs:element name="GRID" type="GridType" minOccurs="0"/>
       <xs:element name="PICTURES" type="PicturesContainerType" minOccurs="0"/>
-      
+
+      <!-- Revision 2 -->
+      <xs:element name="FILLOPACITY" type="OpacityType" minOccurs="0"/>
+      <xs:element name="LINEWIDTHPX" type="xs:float" minOccurs="0"/>
+      <xs:element name="LINESTYLENAME" type="LineStyleNameType" minOccurs="0"/>
+      <xs:element name="SHOWPINSWHENUNLOCKED" type="BinaryFlag" minOccurs="0"/>
+      <xs:element name="SHOWPRICELABEL" type="BinaryFlag" minOccurs="0"/>
+      <xs:element name="ISBUFFER" type="BinaryFlag" minOccurs="0"/>
+      <xs:element name="PARENTID" type="xs:string" minOccurs="0"/>
+      <xs:element name="PRODUCTID" type="xs:string" minOccurs="0"/>
+      <xs:element name="TEXTUREROTATION" type="xs:float" minOccurs="0"/>
+      <xs:element name="ALTITUDEMODE3D" type="xs:string" minOccurs="0"/>
+      <xs:element name="ALTITUDE3D" type="xs:float" minOccurs="0"/>
+      <xs:element name="EXTRUDED3D" type="BinaryFlag" minOccurs="0"/>
+      <xs:element name="PARCELPROVIDERID" type="xs:string" minOccurs="0"/>
+      <xs:element name="PARCELREFERENCE" type="xs:string" minOccurs="0"/>
+      <xs:element name="PARCELEXTRAINFO" type="xs:string" minOccurs="0"/>
+
       <!-- Container for the list of points -->
       <xs:element name="POINTS" minOccurs="0">
         <xs:complexType>
@@ -208,6 +264,7 @@
         </xs:complexType>
       </xs:element>
     </xs:all>
+    <xs:attribute name="id" type="xs:string" use="optional"/>
   </xs:complexType>
 
   <!-- SPOT Structure -->
@@ -237,12 +294,15 @@
       <xs:element name="SPOTICONCUSTOMCOLOR" type="HexColorType" minOccurs="0"/>
       <xs:element name="LAT" type="LatitudeType"/>
       <xs:element name="LONG" type="LongitudeType"/>
-      <xs:element name="ALT" type="xs:float" minOccurs="0"/>      
+      <xs:element name="ALT" type="xs:float" minOccurs="0"/>
       <xs:element name="PICTURES" type="PicturesContainerType" minOccurs="0"/>
       <xs:element name="COORDINATESPOTNAMELATITUDE" type="LatitudeType"/>
-      <xs:element name="COORDINATESPOTNAMELONGITUDE" type="LongitudeType"/>  
-      <xs:element name="DESCSPOT" type="SpotDescType" minOccurs="0"/>    
+      <xs:element name="COORDINATESPOTNAMELONGITUDE" type="LongitudeType"/>
+      <xs:element name="DESCSPOT" type="SpotDescType" minOccurs="0"/>
+      <xs:element name="ALT3D" type="xs:float" minOccurs="0"/>
+      <xs:element name="PRODUCTID" type="xs:string" minOccurs="0"/>
     </xs:all>
+    <xs:attribute name="id" type="xs:string" use="optional"/>
   </xs:complexType>
 
   <!-- IMAGELAYER Structure -->
@@ -258,6 +318,30 @@
     </xs:all>
   </xs:complexType>
 
+  <!-- LAYER Structure (revision 2): layers an IMAGELAYER cannot describe -->
+  <xs:complexType name="LayerType">
+    <xs:all>
+      <xs:element name="NAME" type="xs:string"/>
+      <xs:element name="URL" type="xs:string"/>
+      <xs:element name="OPACITY" type="OpacityType" minOccurs="0"/>
+      <xs:element name="LAT1" type="LatitudeType" minOccurs="0"/>
+      <xs:element name="LONG1" type="LongitudeType" minOccurs="0"/>
+      <xs:element name="LAT2" type="LatitudeType" minOccurs="0"/>
+      <xs:element name="LONG2" type="LongitudeType" minOccurs="0"/>
+      <xs:element name="FEATURECOUNT" type="xs:integer" minOccurs="0"/>
+    </xs:all>
+    <xs:attribute name="type" type="LayerKindType" use="required"/>
+  </xs:complexType>
+
+  <!-- PROJECT Structure (revision 2): settings that travel with the file -->
+  <xs:complexType name="ProjectSettingsType">
+    <xs:all>
+      <xs:element name="TAXRATE" type="xs:float" minOccurs="0"/>
+      <xs:element name="CLIENTNAME" type="xs:string" minOccurs="0"/>
+      <xs:element name="DEFAULTPRODUCTID" type="xs:string" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+
   <!-- ================================================== -->
   <!-- Main Definition                                    -->
   <!-- ================================================== -->
@@ -268,9 +352,9 @@
       <xs:sequence>
 
         <xs:element name="POLYGON" type="PolygonType" minOccurs="0" maxOccurs="unbounded"/>
-        
+
         <xs:element name="SPOT" type="SpotType" minOccurs="0" maxOccurs="unbounded"/>
-        
+
         <xs:element name="IMAGELAYER" type="ImageLayerType" minOccurs="0" maxOccurs="unbounded"/>
 
         <xs:element name="GROUPS" minOccurs="0">
@@ -281,6 +365,10 @@
           </xs:complexType>
         </xs:element>
 
+        <xs:element name="LAYER" type="LayerType" minOccurs="0" maxOccurs="unbounded"/>
+
+        <xs:element name="PROJECT" type="ProjectSettingsType" minOccurs="0"/>
+
       </xs:sequence>
 
       <!-- Optional Root Attributes -->
@@ -288,7 +376,9 @@
       <xs:attribute name="creator" type="xs:string" use="optional"/>
       <xs:attribute name="date" type="xs:string" use="optional"/>
       <xs:attribute name="project" type="xs:string" use="optional"/>
-      
+      <xs:attribute name="projectId" type="xs:string" use="optional"/>
+      <xs:attribute name="projectName" type="xs:string" use="optional"/>
+
     </xs:complexType>
   </xs:element>
 
