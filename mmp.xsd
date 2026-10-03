@@ -14,7 +14,7 @@
      rounded AREATRANSPARENCY / LINEWIDTH / LINESTYLE), SHOWPINSWHENUNLOCKED,
      SHOWPRICELABEL, ISBUFFER, PARENTID, PRODUCTID, TEXTUREROTATION,
      ALTITUDEMODE3D, ALTITUDE3D, EXTRUDED3D, PARCELPROVIDERID, PARCELREFERENCE,
-     PARCELEXTRAINFO.
+     PARCELEXTRAINFO, TITLELABELMANUAL (1 = the label was placed by hand).
    - POINT: ALT3D. SPOT: ALT3D, PRODUCTID. GROUP: SHOWBOUNDS.
    - Root: LAYER (reference and MBTiles layers) and PROJECT (settings) after
      GROUPS; optional projectId / projectName attributes.
@@ -251,6 +251,7 @@
       <xs:element name="ALTITUDEMODE3D" type="xs:string" minOccurs="0"/>
       <xs:element name="ALTITUDE3D" type="xs:float" minOccurs="0"/>
       <xs:element name="EXTRUDED3D" type="BinaryFlag" minOccurs="0"/>
+      <xs:element name="TITLELABELMANUAL" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="PARCELPROVIDERID" type="xs:string" minOccurs="0"/>
       <xs:element name="PARCELREFERENCE" type="xs:string" minOccurs="0"/>
       <xs:element name="PARCELEXTRAINFO" type="xs:string" minOccurs="0"/>
