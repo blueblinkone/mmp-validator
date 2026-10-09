@@ -15,7 +15,9 @@
      SHOWPRICELABEL, ISBUFFER, PARENTID, PRODUCTID, TEXTUREROTATION,
      ALTITUDEMODE3D, ALTITUDE3D, EXTRUDED3D, PARCELPROVIDERID, PARCELREFERENCE,
      PARCELEXTRAINFO, TITLELABELMANUAL (1 = the label was placed by hand).
-   - POINT: ALT3D. SPOT: ALT3D, PRODUCTID. GROUP: SHOWBOUNDS.
+   - POINT: ALT3D. SPOT: ALT3D, PRODUCTID, PRODUCTIDS. GROUP: SHOWBOUNDS.
+   - POLYGON, SPOT: PRODUCTIDS, every product on the shape when it has more
+     than one, space-separated; PRODUCTID is still the first.
    - Root: LAYER (reference and MBTiles layers) and PROJECT (settings) after
      GROUPS; optional projectId / projectName attributes.
    - LINESTYLE 0-5 (5 = dash-dot), AREATRANSPARENCY 0-10 (0 = opaque): values
@@ -252,6 +254,7 @@
       <xs:element name="ALTITUDE3D" type="xs:float" minOccurs="0"/>
       <xs:element name="EXTRUDED3D" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="TITLELABELMANUAL" type="BinaryFlag" minOccurs="0"/>
+      <xs:element name="PRODUCTIDS" type="IdListType" minOccurs="0"/>
       <xs:element name="PARCELPROVIDERID" type="xs:string" minOccurs="0"/>
       <xs:element name="PARCELREFERENCE" type="xs:string" minOccurs="0"/>
       <xs:element name="PARCELEXTRAINFO" type="xs:string" minOccurs="0"/>
@@ -302,9 +305,15 @@
       <xs:element name="DESCSPOT" type="SpotDescType" minOccurs="0"/>
       <xs:element name="ALT3D" type="xs:float" minOccurs="0"/>
       <xs:element name="PRODUCTID" type="xs:string" minOccurs="0"/>
+      <xs:element name="PRODUCTIDS" type="IdListType" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="id" type="xs:string" use="optional"/>
   </xs:complexType>
+
+  <!-- Ids, space-separated (PRODUCTIDS) -->
+  <xs:simpleType name="IdListType">
+    <xs:list itemType="xs:token"/>
+  </xs:simpleType>
 
   <!-- IMAGELAYER Structure -->
   <xs:complexType name="ImageLayerType">
