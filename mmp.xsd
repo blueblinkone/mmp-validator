@@ -15,7 +15,15 @@
      SHOWPRICELABEL, ISBUFFER, PARENTID, PRODUCTID, TEXTUREROTATION,
      ALTITUDEMODE3D, ALTITUDE3D, EXTRUDED3D, PARCELPROVIDERID, PARCELREFERENCE,
      PARCELEXTRAINFO, TITLELABELMANUAL (1 = the label was placed by hand),
-     HEIGHTOFFSET3D (metres the shape is moved up or down in 3D).
+     HEIGHTOFFSET3D (metres the shape is moved up or down in 3D),
+     GRIDLINECOLOR, GRIDLINEWIDTHPX, GRIDSHOWCENTRES (the grid's own line
+     colour and thickness in pixels; 0 = no dot at each cell's centre),
+     BUFFERSOURCEID, BUFFERSETID, BUFFERPART, BUFFERDISTANCE, BUFFERCORNER,
+     BUFFERINSIDE, BUFFEREND, BUFFERSIDE, BUFFERMITRELIMIT, BUFFERRING (how a
+     buffer was drawn: the shape it follows and the set its pieces share, by
+     their ids in the file, which piece it is, the distance in metres, its
+     corners, inside the shape or round it, a line's ends and side, the mitre
+     limit, and 1 = a ring left inside one of its pieces).
    - POINT: ALT3D. SPOT: ALT3D, PRODUCTID, PRODUCTIDS. GROUP: SHOWBOUNDS.
    - POLYGON, SPOT: PRODUCTIDS, every product on the shape when it has more
      than one, space-separated; PRODUCTID is still the first.
@@ -74,6 +82,30 @@
       <xs:enumeration value="dash_dot"/>
       <xs:enumeration value="dash_dot_dot"/>
       <xs:enumeration value="dash_dash_dot"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BufferCornerType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="sharp"/>
+      <xs:enumeration value="round"/>
+      <xs:enumeration value="cut"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BufferEndType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="round"/>
+      <xs:enumeration value="flat"/>
+      <xs:enumeration value="square"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BufferSideType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="both"/>
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -249,6 +281,16 @@
       <xs:element name="SHOWPRICELABEL" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="ISBUFFER" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="PARENTID" type="xs:string" minOccurs="0"/>
+      <xs:element name="BUFFERSOURCEID" type="xs:string" minOccurs="0"/>
+      <xs:element name="BUFFERSETID" type="xs:string" minOccurs="0"/>
+      <xs:element name="BUFFERPART" type="xs:nonNegativeInteger" minOccurs="0"/>
+      <xs:element name="BUFFERDISTANCE" type="xs:float" minOccurs="0"/>
+      <xs:element name="BUFFERCORNER" type="BufferCornerType" minOccurs="0"/>
+      <xs:element name="BUFFERINSIDE" type="BinaryFlag" minOccurs="0"/>
+      <xs:element name="BUFFEREND" type="BufferEndType" minOccurs="0"/>
+      <xs:element name="BUFFERSIDE" type="BufferSideType" minOccurs="0"/>
+      <xs:element name="BUFFERMITRELIMIT" type="xs:float" minOccurs="0"/>
+      <xs:element name="BUFFERRING" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="PRODUCTID" type="xs:string" minOccurs="0"/>
       <xs:element name="TEXTUREROTATION" type="xs:float" minOccurs="0"/>
       <xs:element name="ALTITUDEMODE3D" type="xs:string" minOccurs="0"/>
@@ -256,6 +298,9 @@
       <xs:element name="EXTRUDED3D" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="TITLELABELMANUAL" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="HEIGHTOFFSET3D" type="xs:float" minOccurs="0"/>
+      <xs:element name="GRIDLINECOLOR" type="HexColorType" minOccurs="0"/>
+      <xs:element name="GRIDLINEWIDTHPX" type="xs:float" minOccurs="0"/>
+      <xs:element name="GRIDSHOWCENTRES" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="PRODUCTIDS" type="IdListType" minOccurs="0"/>
       <xs:element name="PARCELPROVIDERID" type="xs:string" minOccurs="0"/>
       <xs:element name="PARCELREFERENCE" type="xs:string" minOccurs="0"/>
