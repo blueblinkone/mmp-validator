@@ -134,6 +134,16 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- How a shape sits in the 3D view. Absent = default. -->
+  <xs:simpleType name="AltitudeMode3dType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="default"/> <!-- the project's default -->
+      <xs:enumeration value="ground"/>  <!-- on the bare earth -->
+      <xs:enumeration value="mesh"/>    <!-- on the surface, buildings included -->
+      <xs:enumeration value="placed"/>  <!-- where it was put by hand in the 3D view -->
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="LayerKindType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="image_overlay"/>
@@ -318,7 +328,7 @@
       <xs:element name="BUFFERRING" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="PRODUCTID" type="xs:string" minOccurs="0"/>
       <xs:element name="TEXTUREROTATION" type="xs:float" minOccurs="0"/>
-      <xs:element name="ALTITUDEMODE3D" type="xs:string" minOccurs="0"/>
+      <xs:element name="ALTITUDEMODE3D" type="AltitudeMode3dType" minOccurs="0"/>
       <xs:element name="ALTITUDE3D" type="xs:float" minOccurs="0"/>
       <xs:element name="EXTRUDED3D" type="BinaryFlag" minOccurs="0"/>
       <xs:element name="TITLELABELMANUAL" type="BinaryFlag" minOccurs="0"/>
