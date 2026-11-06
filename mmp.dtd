@@ -1,113 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- ================================================== -->
-<!-- MMP DTD - Equivalent to mmp.xsd                    -->
-<!-- Revision 2: additions only, all optional (see the  -->
-<!-- comment at the top of mmp.xsd).                    -->
+<!-- MMP DTD                                            -->
+<!--                                                    -->
+<!-- mmp.xsd is the reference. This DTD accepts the     -->
+<!-- same elements in the same places, but a DTD cannot -->
+<!-- say everything the schema does:                    -->
+<!--  - Inside POLYGON, POINT, SPOT, GROUP and the other -->
+<!--    entries, the schema lets the fields come in any -->
+<!--    order, each at most once, some required. A DTD  -->
+<!--    can only list what may be inside, in any order: -->
+<!--    it does not check that a field is there, or     -->
+<!--    there only once.                                -->
+<!--  - Values (numbers, ranges, flags, colours, codes) -->
+<!--    are not checked: the comments say what each     -->
+<!--    holds, and mmp.xsd checks them.                 -->
+<!--  - The root is POLYGONS only when the file says so -->
+<!--    (<!DOCTYPE POLYGONS ...>): .mmp files do not,   -->
+<!--    so a validator given this DTD alone takes any   -->
+<!--    element declared here as the root.              -->
+<!-- The root's lists keep the schema's order.          -->
 <!-- ================================================== -->
 
 <!-- Root Element -->
-<!ELEMENT POLYGONS (GROUPS?, POLYGON*, SPOT*, IMAGELAYER*, LAYER*, PROJECT?)>
+<!ELEMENT POLYGONS (POLYGON*, SPOT*, IMAGELAYER*, GROUPS?, LAYER*, PROJECT?)>
 <!ATTLIST POLYGONS
+    id CDATA #IMPLIED
     creator CDATA #IMPLIED
     date CDATA #IMPLIED
     project CDATA #IMPLIED
-    id CDATA #IMPLIED
     projectId CDATA #IMPLIED
     projectName CDATA #IMPLIED
+    xmlns:xsi CDATA #IMPLIED
+    xsi:noNamespaceSchemaLocation CDATA #IMPLIED
 >
-
-<!-- ================================================== -->
-<!-- GROUPS Structure                                   -->
-<!-- ================================================== -->
-
-<!ELEMENT GROUPS (GROUP*)>
-
-<!ELEMENT GROUP (ID, NAME, DESCRIPTION, GROUPCOLOR, GROUPCUSTOMCOLOR?, SHOWBOUNDS?)>
-<!ATTLIST GROUP id CDATA #IMPLIED>
-<!ELEMENT ID (#PCDATA)>
-<!ELEMENT NAME (#PCDATA)>
-<!ELEMENT DESCRIPTION (#PCDATA)>
-<!ELEMENT GROUPCOLOR (#PCDATA)> <!-- Integer 0-7 -->
-<!ELEMENT GROUPCUSTOMCOLOR (#PCDATA)> <!-- Hex color -->
-<!ELEMENT SHOWBOUNDS (#PCDATA)> <!-- BinaryFlag: 0 or 1 (revision 2) -->
 
 <!-- ================================================== -->
 <!-- POLYGON Structure                                  -->
 <!-- ================================================== -->
 
-<!ELEMENT POLYGON (GROUPID?, NAME, DESCRIPTION, ISHOLE, BLOCKED, SHAPE, NOSURFACE, SHOWPINS, SHOWDISTANCES, LINECOLOR, LINECUSTOMCOLOR?, LINEWIDTH, LINESTYLE, AREACOLOR, AREACUSTOMCOLOR?, AREATRANSPARENCY, SHOWNAME, SHOWLABELBACKGROUND, SHOWAREAMEASURE, SHOWPERIMETERMEASURE, COORDINATEPOLYGONLABELLATITUDE, COORDINATEPOLYGONLABELLONGITUDE, COORDINATEPERIMETERLABELLATITUDE, COORDINATEPERIMETERLABELLONGITUDE, COORDINATEAREALABELLATITUDE, COORDINATEAREALABELLONGITUDE, GRID?, FILLOPACITY?, LINEWIDTHPX?, LINESTYLENAME?, SHOWPINSWHENUNLOCKED?, SHOWPRICELABEL?, ISBUFFER?, PARENTID?, BUFFERSOURCEID?, BUFFERSETID?, BUFFERPART?, BUFFERDISTANCE?, BUFFERCORNER?, BUFFERINSIDE?, BUFFEREND?, BUFFERSIDE?, BUFFERMITRELIMIT?, BUFFERRING?, PRODUCTID?, TEXTUREROTATION?, ALTITUDEMODE3D?, ALTITUDE3D?, EXTRUDED3D?, TITLELABELMANUAL?, HEIGHTOFFSET3D?, GRIDLINECOLOR?, GRIDLINEWIDTHPX?, GRIDSHOWCENTRES?, PRODUCTIDS?, PARCELPROVIDERID?, PARCELREFERENCE?, PARCELEXTRAINFO?, PICTURES?, POINTS?)>
+<!-- Required in the schema: NAME, ISHOLE, BLOCKED, SHAPE, NOSURFACE, SHOWPINS,
+     SHOWDISTANCES, LINECOLOR, LINEWIDTH, LINESTYLE, AREACOLOR, AREATRANSPARENCY,
+     SHOWNAME, SHOWLABELBACKGROUND, SHOWAREAMEASURE, SHOWPERIMETERMEASURE and the
+     six COORDINATE...LABEL... fields. -->
+<!ELEMENT POLYGON (GROUPID | NAME | DESCRIPTION | ISHOLE | BLOCKED | SHAPE | NOSURFACE
+    | SHOWPINS | SHOWDISTANCES | LINECOLOR | LINECUSTOMCOLOR | LINEWIDTH | LINESTYLE
+    | AREACOLOR | AREACUSTOMCOLOR | AREATRANSPARENCY | SHOWNAME | SHOWLABELBACKGROUND
+    | SHOWAREAMEASURE | SHOWPERIMETERMEASURE
+    | COORDINATEPOLYGONLABELLATITUDE | COORDINATEPOLYGONLABELLONGITUDE
+    | COORDINATEPERIMETERLABELLATITUDE | COORDINATEPERIMETERLABELLONGITUDE
+    | COORDINATEAREALABELLATITUDE | COORDINATEAREALABELLONGITUDE
+    | GRID | PICTURES
+    | FILLOPACITY | LINEWIDTHPX | LINESTYLENAME | SHOWPINSWHENUNLOCKED | SHOWPRICELABEL
+    | ISBUFFER | PARENTID | BUFFERSOURCEID | BUFFERSETID | BUFFERPART | BUFFERDISTANCE
+    | BUFFERCORNER | BUFFERINSIDE | BUFFEREND | BUFFERSIDE | BUFFERMITRELIMIT | BUFFERRING
+    | PRODUCTID | TEXTUREROTATION | ALTITUDEMODE3D | ALTITUDE3D | EXTRUDED3D
+    | TITLELABELMANUAL | HEIGHTOFFSET3D | GRIDLINECOLOR | GRIDLINEWIDTHPX | GRIDSHOWCENTRES
+    | PRODUCTIDS | PARCELPROVIDERID | PARCELREFERENCE | PARCELEXTRAINFO
+    | POINTS)*>
 <!ATTLIST POLYGON id CDATA #IMPLIED>
 
 <!ELEMENT GROUPID (#PCDATA)>
-<!ELEMENT ISHOLE (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT BLOCKED (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHAPE (#PCDATA)> <!-- Integer: 0=polygon, 1=circle, 2=rectangle -->
-<!ELEMENT NOSURFACE (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHOWPINS (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHOWDISTANCES (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT LINECOLOR (#PCDATA)> <!-- Integer 0-6 -->
-<!ELEMENT LINECUSTOMCOLOR (#PCDATA)> <!-- Hex color -->
-<!ELEMENT LINEWIDTH (#PCDATA)> <!-- Integer 0-10 -->
-<!ELEMENT LINESTYLE (#PCDATA)> <!-- Integer 0-5 (5 = dash-dot) -->
-<!ELEMENT AREACOLOR (#PCDATA)> <!-- Integer 0-6 -->
-<!ELEMENT AREACUSTOMCOLOR (#PCDATA)> <!-- Hex color -->
-<!ELEMENT AREATRANSPARENCY (#PCDATA)> <!-- Integer 0-10 (0 = opaque) -->
-<!ELEMENT SHOWNAME (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHOWLABELBACKGROUND (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHOWAREAMEASURE (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHOWPERIMETERMEASURE (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT COORDINATEPOLYGONLABELLATITUDE (#PCDATA)> <!-- Latitude: -90 to 90 -->
-<!ELEMENT COORDINATEPOLYGONLABELLONGITUDE (#PCDATA)> <!-- Longitude: -180 to 180 -->
-<!ELEMENT COORDINATEPERIMETERLABELLATITUDE (#PCDATA)> <!-- Latitude: -90 to 90 -->
-<!ELEMENT COORDINATEPERIMETERLABELLONGITUDE (#PCDATA)> <!-- Longitude: -180 to 180 -->
-<!ELEMENT COORDINATEAREALABELLATITUDE (#PCDATA)> <!-- Latitude: -90 to 90 -->
-<!ELEMENT COORDINATEAREALABELLONGITUDE (#PCDATA)> <!-- Longitude: -180 to 180 -->
+<!ELEMENT NAME (#PCDATA)>
+<!ELEMENT DESCRIPTION (#PCDATA)>
+<!ELEMENT ISHOLE (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT BLOCKED (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHAPE (#PCDATA)> <!-- 0 polygon, 1 circle, 2 rectangle -->
+<!ELEMENT NOSURFACE (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHOWPINS (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHOWDISTANCES (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT LINECOLOR (#PCDATA)> <!-- colour code 0-6 (see mmp.xsd); 6 = LINECUSTOMCOLOR -->
+<!ELEMENT LINECUSTOMCOLOR (#PCDATA)> <!-- six hex digits, with or without #, or empty -->
+<!ELEMENT LINEWIDTH (#PCDATA)> <!-- integer 0-10: pixels / 1.5; exact in LINEWIDTHPX -->
+<!ELEMENT LINESTYLE (#PCDATA)> <!-- style code 0-5 (see mmp.xsd); exact in LINESTYLENAME -->
+<!ELEMENT AREACOLOR (#PCDATA)> <!-- colour code 0-6; 6 = AREACUSTOMCOLOR -->
+<!ELEMENT AREACUSTOMCOLOR (#PCDATA)> <!-- six hex digits, with or without #, or empty -->
+<!ELEMENT AREATRANSPARENCY (#PCDATA)> <!-- integer 0-10, 0 = opaque; exact in FILLOPACITY -->
+<!ELEMENT SHOWNAME (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHOWLABELBACKGROUND (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHOWAREAMEASURE (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHOWPERIMETERMEASURE (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT COORDINATEPOLYGONLABELLATITUDE (#PCDATA)> <!-- latitude -90 to 90 -->
+<!ELEMENT COORDINATEPOLYGONLABELLONGITUDE (#PCDATA)> <!-- longitude -180 to 180 -->
+<!ELEMENT COORDINATEPERIMETERLABELLATITUDE (#PCDATA)> <!-- latitude -90 to 90 -->
+<!ELEMENT COORDINATEPERIMETERLABELLONGITUDE (#PCDATA)> <!-- longitude -180 to 180 -->
+<!ELEMENT COORDINATEAREALABELLATITUDE (#PCDATA)> <!-- latitude -90 to 90 -->
+<!ELEMENT COORDINATEAREALABELLONGITUDE (#PCDATA)> <!-- longitude -180 to 180 -->
 
 <!-- Revision 2: exact values beside the rounded ones above, and more -->
-<!ELEMENT FILLOPACITY (#PCDATA)> <!-- Float 0.0-1.0 -->
-<!ELEMENT LINEWIDTHPX (#PCDATA)> <!-- Float -->
-<!ELEMENT LINESTYLENAME (#PCDATA)> <!-- solid | dashed | dotted | dashed_filled | dotted_filled | dash_dot | dash_dot_dot | dash_dash_dot -->
-<!ELEMENT SHOWPINSWHENUNLOCKED (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHOWPRICELABEL (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT ISBUFFER (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
+<!ELEMENT FILLOPACITY (#PCDATA)> <!-- float 0.0-1.0 -->
+<!ELEMENT LINEWIDTHPX (#PCDATA)> <!-- float: pixels -->
+<!ELEMENT LINESTYLENAME (#PCDATA)> <!-- solid, dashed, dotted, dashed_filled, dotted_filled, dash_dot, dash_dot_dot or dash_dash_dot -->
+<!ELEMENT SHOWPINSWHENUNLOCKED (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHOWPRICELABEL (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT ISBUFFER (#PCDATA)> <!-- 0 or 1 -->
 <!ELEMENT PARENTID (#PCDATA)>
-<!ELEMENT BUFFERSOURCEID (#PCDATA)> <!-- Id in this file of the shape the buffer was drawn from -->
-<!ELEMENT BUFFERSETID (#PCDATA)> <!-- Shared by the pieces drawn together -->
-<!ELEMENT BUFFERPART (#PCDATA)> <!-- Non-negative integer: which piece of the set, largest first -->
-<!ELEMENT BUFFERDISTANCE (#PCDATA)> <!-- Float: metres from the shape -->
+<!ELEMENT BUFFERSOURCEID (#PCDATA)> <!-- id in this file of the shape the buffer was drawn from -->
+<!ELEMENT BUFFERSETID (#PCDATA)> <!-- shared by the pieces drawn together -->
+<!ELEMENT BUFFERPART (#PCDATA)> <!-- non-negative integer: which piece of the set, largest first -->
+<!ELEMENT BUFFERDISTANCE (#PCDATA)> <!-- float: metres from the shape -->
 <!ELEMENT BUFFERCORNER (#PCDATA)> <!-- sharp, round or cut -->
-<!ELEMENT BUFFERINSIDE (#PCDATA)> <!-- BinaryFlag: 1 = inside the shape (a setback) -->
+<!ELEMENT BUFFERINSIDE (#PCDATA)> <!-- 0 or 1: 1 = inside the shape (a setback) -->
 <!ELEMENT BUFFEREND (#PCDATA)> <!-- round, flat or square: a line buffer's ends -->
 <!ELEMENT BUFFERSIDE (#PCDATA)> <!-- both, left or right: a line buffer's side -->
-<!ELEMENT BUFFERMITRELIMIT (#PCDATA)> <!-- Float: how far a sharp corner may reach, in distances -->
-<!ELEMENT BUFFERRING (#PCDATA)> <!-- BinaryFlag: 1 = a ring left inside one of the pieces -->
+<!ELEMENT BUFFERMITRELIMIT (#PCDATA)> <!-- float: how far a sharp corner may reach, in distances -->
+<!ELEMENT BUFFERRING (#PCDATA)> <!-- 0 or 1: 1 = a ring left inside one of the pieces -->
 <!ELEMENT PRODUCTID (#PCDATA)>
-<!ELEMENT TEXTUREROTATION (#PCDATA)> <!-- Float -->
-<!ELEMENT ALTITUDEMODE3D (#PCDATA)>
-<!ELEMENT ALTITUDE3D (#PCDATA)> <!-- Float -->
-<!ELEMENT EXTRUDED3D (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
+<!ELEMENT TEXTUREROTATION (#PCDATA)> <!-- float: degrees -->
+<!ELEMENT ALTITUDEMODE3D (#PCDATA)> <!-- default, ground, mesh or placed -->
+<!ELEMENT ALTITUDE3D (#PCDATA)> <!-- float -->
+<!ELEMENT EXTRUDED3D (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT TITLELABELMANUAL (#PCDATA)> <!-- 0 or 1: 1 = the label was placed by hand -->
+<!ELEMENT HEIGHTOFFSET3D (#PCDATA)> <!-- float: metres the shape is moved up or down in 3D -->
+<!ELEMENT GRIDLINECOLOR (#PCDATA)> <!-- six hex digits, with or without #, or empty -->
+<!ELEMENT GRIDLINEWIDTHPX (#PCDATA)> <!-- float: grid line thickness in pixels -->
+<!ELEMENT GRIDSHOWCENTRES (#PCDATA)> <!-- 0 or 1: 0 = no dot at each cell's centre -->
+<!ELEMENT PRODUCTIDS (#PCDATA)> <!-- space-separated product ids; PRODUCTID is the first -->
 <!ELEMENT PARCELPROVIDERID (#PCDATA)>
 <!ELEMENT PARCELREFERENCE (#PCDATA)>
 <!ELEMENT PARCELEXTRAINFO (#PCDATA)>
-<!ELEMENT TITLELABELMANUAL (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT HEIGHTOFFSET3D (#PCDATA)> <!-- Float: metres the shape is moved up or down in 3D -->
-<!ELEMENT GRIDLINECOLOR (#PCDATA)> <!-- Hex colour of the grid lines, without # -->
-<!ELEMENT GRIDLINEWIDTHPX (#PCDATA)> <!-- Float: grid line thickness in pixels -->
-<!ELEMENT GRIDSHOWCENTRES (#PCDATA)> <!-- BinaryFlag: 0 = no dot at each cell's centre -->
-<!ELEMENT PRODUCTIDS (#PCDATA)> <!-- Space-separated product ids; PRODUCTID is the first -->
 
 <!-- ================================================== -->
 <!-- GRID Structure                                     -->
 <!-- ================================================== -->
 
-<!ELEMENT GRID (CELLWIDTH, CELLHEIGHT, BEARING, REFLATITUDE, REFLONGITUDE, SHOWGRID)>
-<!ELEMENT CELLWIDTH (#PCDATA)> <!-- Float -->
-<!ELEMENT CELLHEIGHT (#PCDATA)> <!-- Float -->
-<!ELEMENT BEARING (#PCDATA)> <!-- Float -->
-<!ELEMENT REFLATITUDE (#PCDATA)> <!-- Latitude: -90 to 90 -->
-<!ELEMENT REFLONGITUDE (#PCDATA)> <!-- Longitude: -180 to 180 -->
-<!ELEMENT SHOWGRID (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
+<!-- All six required in the schema. -->
+<!ELEMENT GRID (CELLWIDTH | CELLHEIGHT | BEARING | REFLATITUDE | REFLONGITUDE | SHOWGRID)*>
+<!ELEMENT CELLWIDTH (#PCDATA)> <!-- float: metres -->
+<!ELEMENT CELLHEIGHT (#PCDATA)> <!-- float: metres -->
+<!ELEMENT BEARING (#PCDATA)> <!-- float: degrees -->
+<!ELEMENT REFLATITUDE (#PCDATA)> <!-- latitude of a corner of the grid -->
+<!ELEMENT REFLONGITUDE (#PCDATA)> <!-- longitude of a corner of the grid -->
+<!ELEMENT SHOWGRID (#PCDATA)> <!-- 0 or 1 -->
 
 <!-- ================================================== -->
 <!-- PICTURES Structure                                 -->
@@ -115,11 +139,12 @@
 
 <!ELEMENT PICTURES (PICTURE*)>
 
-<!ELEMENT PICTURE (DATE?, PICTUREURL, PICTURETHUMBNAILURL?, SHOWPICTINREPORT?)>
-<!ELEMENT DATE (#PCDATA)> <!-- ISO 8601 date string -->
+<!-- PICTUREURL required in the schema. -->
+<!ELEMENT PICTURE (DATE | PICTUREURL | PICTURETHUMBNAILURL | SHOWPICTINREPORT)*>
+<!ELEMENT DATE (#PCDATA)> <!-- ISO 8601 -->
 <!ELEMENT PICTUREURL (#PCDATA)>
 <!ELEMENT PICTURETHUMBNAILURL (#PCDATA)>
-<!ELEMENT SHOWPICTINREPORT (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
+<!ELEMENT SHOWPICTINREPORT (#PCDATA)> <!-- 0 or 1 -->
 
 <!-- ================================================== -->
 <!-- POINTS Structure                                   -->
@@ -127,63 +152,86 @@
 
 <!ELEMENT POINTS (POINT*)>
 
-<!ELEMENT POINT (LAT, LONG, ALT?, DESCPOINT?, ALT3D?, PICTURES?)>
+<!-- LAT and LONG required in the schema. -->
+<!ELEMENT POINT (LAT | LONG | ALT | DESCPOINT | PICTURES | ALT3D)*>
 <!ATTLIST POINT id CDATA #IMPLIED>
-<!ELEMENT LAT (#PCDATA)> <!-- Float -->
-<!ELEMENT LONG (#PCDATA)> <!-- Float -->
-<!ELEMENT ALT (#PCDATA)> <!-- Float -->
-<!ELEMENT ALT3D (#PCDATA)> <!-- Float (revision 2) -->
+<!ELEMENT LAT (#PCDATA)> <!-- latitude -90 to 90 -->
+<!ELEMENT LONG (#PCDATA)> <!-- longitude -180 to 180 -->
+<!ELEMENT ALT (#PCDATA)> <!-- float -->
+<!ELEMENT ALT3D (#PCDATA)> <!-- float -->
 
-<!ELEMENT DESCPOINT (SHOWDESC?, SHOWLABELBACKGROUND?, SHOWDESCINREPORT?, DESC, DESCLAT, DESCLONG)>
-<!ELEMENT SHOWDESC (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
-<!ELEMENT SHOWDESCINREPORT (#PCDATA)> <!-- BinaryFlag: 0 or 1 -->
+<!ELEMENT DESCPOINT (SHOWDESC | SHOWLABELBACKGROUND | SHOWDESCINREPORT | DESC | DESCLAT | DESCLONG)*>
+<!ELEMENT SHOWDESC (#PCDATA)> <!-- 0 or 1 -->
+<!ELEMENT SHOWDESCINREPORT (#PCDATA)> <!-- 0 or 1 -->
 <!ELEMENT DESC (#PCDATA)>
-<!ELEMENT DESCLAT (#PCDATA)> <!-- Float -->
-<!ELEMENT DESCLONG (#PCDATA)> <!-- Float -->
+<!ELEMENT DESCLAT (#PCDATA)> <!-- latitude -90 to 90 -->
+<!ELEMENT DESCLONG (#PCDATA)> <!-- longitude -180 to 180 -->
 
 <!-- ================================================== -->
 <!-- SPOT Structure                                     -->
 <!-- ================================================== -->
 
-<!ELEMENT SPOT (GROUPID?, NAME, SHOWNAME, SHOWLABELBACKGROUND, ICON, SPOTICONCOLOR, SPOTICONCUSTOMCOLOR?, LAT, LONG, ALT?, PICTURES?, COORDINATESPOTNAMELATITUDE, COORDINATESPOTNAMELONGITUDE, DESCSPOT?, ALT3D?, PRODUCTID?, PRODUCTIDS?)>
+<!-- Required in the schema: NAME, SHOWNAME, SHOWLABELBACKGROUND, ICON,
+     SPOTICONCOLOR, LAT, LONG, COORDINATESPOTNAMELATITUDE and
+     COORDINATESPOTNAMELONGITUDE. -->
+<!ELEMENT SPOT (GROUPID | NAME | SHOWNAME | SHOWLABELBACKGROUND | ICON | SPOTICONCOLOR
+    | SPOTICONCUSTOMCOLOR | LAT | LONG | ALT | PICTURES
+    | COORDINATESPOTNAMELATITUDE | COORDINATESPOTNAMELONGITUDE | DESCSPOT
+    | ALT3D | PRODUCTID | PRODUCTIDS)*>
 <!ATTLIST SPOT id CDATA #IMPLIED>
 
-<!ELEMENT ICON (#PCDATA)> <!-- Integer -->
-<!ELEMENT SPOTICONCOLOR (#PCDATA)> <!-- Integer 0-7 -->
-<!ELEMENT SPOTICONCUSTOMCOLOR (#PCDATA)> <!-- Hex color -->
-<!ELEMENT COORDINATESPOTNAMELATITUDE (#PCDATA)> <!-- Float -->
-<!ELEMENT COORDINATESPOTNAMELONGITUDE (#PCDATA)> <!-- Float -->
+<!ELEMENT ICON (#PCDATA)> <!-- integer -->
+<!ELEMENT SPOTICONCOLOR (#PCDATA)> <!-- colour code 0-7; 6 = SPOTICONCUSTOMCOLOR -->
+<!ELEMENT SPOTICONCUSTOMCOLOR (#PCDATA)> <!-- six hex digits, with or without #, or empty -->
+<!ELEMENT COORDINATESPOTNAMELATITUDE (#PCDATA)> <!-- latitude -90 to 90 -->
+<!ELEMENT COORDINATESPOTNAMELONGITUDE (#PCDATA)> <!-- longitude -180 to 180 -->
 
-<!ELEMENT DESCSPOT (SHOWDESC?, SHOWDESCINREPORT?, DESC?)>
+<!ELEMENT DESCSPOT (SHOWDESC | SHOWDESCINREPORT | DESC)*>
 
 <!-- ================================================== -->
 <!-- IMAGELAYER Structure                               -->
 <!-- ================================================== -->
 
-<!ELEMENT IMAGELAYER (NAME, IMAGEURL?, OPACITY, LAT1, LONG1, LAT2, LONG2)>
+<!-- Required in the schema: NAME, OPACITY and the four corners. -->
+<!ELEMENT IMAGELAYER (NAME | IMAGEURL | OPACITY | LAT1 | LONG1 | LAT2 | LONG2)*>
 <!ELEMENT IMAGEURL (#PCDATA)>
-<!ELEMENT OPACITY (#PCDATA)> <!-- Float 0.0-1.0 -->
-<!ELEMENT LAT1 (#PCDATA)> <!-- Float -->
-<!ELEMENT LONG1 (#PCDATA)> <!-- Float -->
-<!ELEMENT LAT2 (#PCDATA)> <!-- Float -->
-<!ELEMENT LONG2 (#PCDATA)> <!-- Float -->
+<!ELEMENT OPACITY (#PCDATA)> <!-- float 0.0-1.0 -->
+<!ELEMENT LAT1 (#PCDATA)> <!-- latitude of the north-west corner -->
+<!ELEMENT LONG1 (#PCDATA)> <!-- longitude of the north-west corner -->
+<!ELEMENT LAT2 (#PCDATA)> <!-- latitude of the south-east corner -->
+<!ELEMENT LONG2 (#PCDATA)> <!-- longitude of the south-east corner -->
+
+<!-- ================================================== -->
+<!-- GROUPS Structure                                   -->
+<!-- ================================================== -->
+
+<!ELEMENT GROUPS (GROUP*)>
+
+<!-- Required in the schema: ID, NAME and GROUPCOLOR. -->
+<!ELEMENT GROUP (ID | NAME | DESCRIPTION | GROUPCOLOR | GROUPCUSTOMCOLOR | SHOWBOUNDS)*>
+<!ATTLIST GROUP id CDATA #IMPLIED>
+<!ELEMENT ID (#PCDATA)>
+<!ELEMENT GROUPCOLOR (#PCDATA)> <!-- colour code 0-7; 6 = GROUPCUSTOMCOLOR -->
+<!ELEMENT GROUPCUSTOMCOLOR (#PCDATA)> <!-- six hex digits, with or without #, or empty -->
+<!ELEMENT SHOWBOUNDS (#PCDATA)> <!-- 0 or 1 -->
 
 <!-- ================================================== -->
 <!-- LAYER Structure (revision 2)                       -->
 <!-- Layers an IMAGELAYER cannot describe               -->
 <!-- ================================================== -->
 
-<!ELEMENT LAYER (NAME, URL, OPACITY?, LAT1?, LONG1?, LAT2?, LONG2?, FEATURECOUNT?)>
+<!-- Required in the schema: NAME and URL. -->
+<!ELEMENT LAYER (NAME | URL | OPACITY | LAT1 | LONG1 | LAT2 | LONG2 | FEATURECOUNT)*>
 <!ATTLIST LAYER type (image_overlay | mbtiles | vector) #REQUIRED>
 <!ELEMENT URL (#PCDATA)>
-<!ELEMENT FEATURECOUNT (#PCDATA)> <!-- Integer -->
+<!ELEMENT FEATURECOUNT (#PCDATA)> <!-- integer -->
 
 <!-- ================================================== -->
 <!-- PROJECT Structure (revision 2)                     -->
 <!-- Settings that travel with the file                 -->
 <!-- ================================================== -->
 
-<!ELEMENT PROJECT (TAXRATE?, CLIENTNAME?, DEFAULTPRODUCTID?)>
-<!ELEMENT TAXRATE (#PCDATA)> <!-- Float -->
+<!ELEMENT PROJECT (TAXRATE | CLIENTNAME | DEFAULTPRODUCTID)*>
+<!ELEMENT TAXRATE (#PCDATA)> <!-- float -->
 <!ELEMENT CLIENTNAME (#PCDATA)>
 <!ELEMENT DEFAULTPRODUCTID (#PCDATA)>
