@@ -25,6 +25,7 @@
      corners, inside the shape or round it, a line's ends and side, the mitre
      limit, and 1 = a ring left inside one of its pieces).
    - POINT: ALT3D. SPOT: ALT3D, PRODUCTID, PRODUCTIDS. GROUP: SHOWBOUNDS.
+     IMAGELAYER: ROTATION (degrees clockwise, 0 to under 360).
    - POLYGON, SPOT: PRODUCTIDS, every product on the shape when it has more
      than one, space-separated; PRODUCTID is still the first.
    - Root: LAYER (reference and MBTiles layers) and PROJECT (settings) after
@@ -94,6 +95,14 @@
     <xs:restriction base="xs:float">
       <xs:minInclusive value="0.0"/>
       <xs:maxInclusive value="1.0"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Degrees clockwise, 0 to under 360 (IMAGELAYER's ROTATION) -->
+  <xs:simpleType name="RotationType">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0.0"/>
+      <xs:maxExclusive value="360.0"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -407,6 +416,10 @@
       <xs:element name="LONG1" type="LongitudeType"/>
       <xs:element name="LAT2" type="LatitudeType"/> <!-- south-east corner -->
       <xs:element name="LONG2" type="LongitudeType"/>
+      <!-- Revision 2: degrees the image is turned clockwise about the middle of
+           the LAT1/LONG1 - LAT2/LONG2 box, which stays the image's own box,
+           before it is turned. Absent = 0. -->
+      <xs:element name="ROTATION" type="RotationType" minOccurs="0"/>
     </xs:all>
   </xs:complexType>
 

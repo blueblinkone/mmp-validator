@@ -212,6 +212,7 @@ Line two</DESCRIPTION>
     <LONG1>-0.5</LONG1>
     <LAT2>39</LAT2>
     <LONG2>-0.3</LONG2>
+    <ROTATION>15.5</ROTATION>
   </IMAGELAYER>
   <GROUPS>
     <GROUP id="g1">

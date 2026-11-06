@@ -193,13 +193,14 @@
 <!-- ================================================== -->
 
 <!-- Required in the schema: NAME, OPACITY and the four corners. -->
-<!ELEMENT IMAGELAYER (NAME | IMAGEURL | OPACITY | LAT1 | LONG1 | LAT2 | LONG2)*>
+<!ELEMENT IMAGELAYER (NAME | IMAGEURL | OPACITY | LAT1 | LONG1 | LAT2 | LONG2 | ROTATION)*>
 <!ELEMENT IMAGEURL (#PCDATA)>
 <!ELEMENT OPACITY (#PCDATA)> <!-- float 0.0-1.0 -->
 <!ELEMENT LAT1 (#PCDATA)> <!-- latitude of the north-west corner -->
 <!ELEMENT LONG1 (#PCDATA)> <!-- longitude of the north-west corner -->
 <!ELEMENT LAT2 (#PCDATA)> <!-- latitude of the south-east corner -->
 <!ELEMENT LONG2 (#PCDATA)> <!-- longitude of the south-east corner -->
+<!ELEMENT ROTATION (#PCDATA)> <!-- float 0 to under 360: degrees clockwise about the box's middle (revision 2) -->
 
 <!-- ================================================== -->
 <!-- GROUPS Structure                                   -->
