@@ -31,6 +31,9 @@
      GROUPS; optional projectId / projectName attributes.
    - LINESTYLE 0-5 (5 = dash-dot), AREATRANSPARENCY 0-10 (0 = opaque): values
      already written in practice.
+   - A custom colour (LINECUSTOMCOLOR, AREACUSTOMCOLOR, SPOTICONCUSTOMCOLOR,
+     GROUPCUSTOMCOLOR, GRIDLINECOLOR) may be empty: there is none, and the
+     colour code is used. The mobile apps write it so.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
@@ -47,7 +50,9 @@
 
   <xs:simpleType name="HexColorType">
     <xs:restriction base="xs:string">
-      <xs:pattern value="(#[a-fA-F0-9]{6}|[a-fA-F0-9]{6})"/> <!-- Hexadecimal color (with or without #) -->
+      <!-- Six hex digits, with or without '#'. Empty means no custom colour:
+           the colour code (0-5) is used instead. -->
+      <xs:pattern value="(#?[a-fA-F0-9]{6})?"/>
     </xs:restriction>
   </xs:simpleType>
 
