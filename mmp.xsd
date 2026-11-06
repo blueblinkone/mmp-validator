@@ -34,6 +34,25 @@
    - A custom colour (LINECUSTOMCOLOR, AREACUSTOMCOLOR, SPOTICONCUSTOMCOLOR,
      GROUPCUSTOMCOLOR, GRIDLINECOLOR) may be empty: there is none, and the
      colour code is used. The mobile apps write it so.
+
+  Meaning of the codes, as every current reader and writer has them:
+   - Colour codes (LINECOLOR, AREACOLOR, SPOTICONCOLOR, GROUPCOLOR):
+     0 red #FF0000, 1 blue #0000FF, 2 green #00FF00, 3 yellow #FFFF00,
+     4 white #FFFFFF, 5 black #000000, 6 custom: the colour is in the matching
+     *CUSTOMCOLOR. SPOTICONCOLOR and GROUPCOLOR also allow 7, for older files:
+     it has no colour of its own, and readers use their default.
+   - LINESTYLE: 0 solid, 1 dashed, 2 dotted, 3 dashed_filled, 4 dotted_filled,
+     5 dash_dot (the LINESTYLENAME names). dash_dash_dot is written as 3 and
+     dash_dot_dot as 4; LINESTYLENAME keeps the exact style.
+   - LINEWIDTH: the line's width in pixels divided by 1.5, rounded, 0-10.
+     LINEWIDTHPX is the exact width in pixels; readers take it first.
+   - AREATRANSPARENCY: tenths of transparency, 0 opaque and 10 invisible, so
+     opacity = (10 - AREATRANSPARENCY) / 10. FILLOPACITY (0-1) is the exact
+     opacity; readers take it first.
+   - GRID: CELLWIDTH and CELLHEIGHT in metres, BEARING in degrees,
+     REFLATITUDE / REFLONGITUDE a corner of the grid.
+   - IMAGELAYER and LAYER: LAT1 / LONG1 the north-west corner, LAT2 / LONG2
+     the south-east one.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
@@ -56,6 +75,7 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- Pixels / 1.5, rounded (see the codes above); exact in LINEWIDTHPX -->
   <xs:simpleType name="LineWidthType">
     <xs:restriction base="xs:integer">
       <xs:minInclusive value="0"/>
@@ -66,7 +86,7 @@
   <xs:simpleType name="AreaTransparencyType">
     <xs:restriction base="xs:integer">
       <xs:minInclusive value="0"/> <!-- 0 = fully opaque fill -->
-      <xs:maxInclusive value="10"/>
+      <xs:maxInclusive value="10"/> <!-- 10 = invisible; opacity = (10 - value) / 10 -->
     </xs:restriction>
   </xs:simpleType>
 
@@ -161,10 +181,10 @@
   <!-- GRID Structure -->
   <xs:complexType name="GridType">
     <xs:all>
-      <xs:element name="CELLWIDTH" type="xs:float"/>
-      <xs:element name="CELLHEIGHT" type="xs:float"/>
-      <xs:element name="BEARING" type="xs:float"/>
-      <xs:element name="REFLATITUDE" type="LatitudeType"/>
+      <xs:element name="CELLWIDTH" type="xs:float"/> <!-- metres -->
+      <xs:element name="CELLHEIGHT" type="xs:float"/> <!-- metres -->
+      <xs:element name="BEARING" type="xs:float"/> <!-- degrees -->
+      <xs:element name="REFLATITUDE" type="LatitudeType"/> <!-- a corner of the grid -->
       <xs:element name="REFLONGITUDE" type="LongitudeType"/>
       <xs:element name="SHOWGRID" type="BinaryFlag"/>
     </xs:all>
@@ -200,7 +220,7 @@
       <xs:element name="ID" type="xs:string"/>
       <xs:element name="NAME" type="xs:string"/>
       <xs:element name="DESCRIPTION" type="xs:string" minOccurs="0"/>
-      <xs:element name="GROUPCOLOR">
+      <xs:element name="GROUPCOLOR"> <!-- colour code, see above; 6 = GROUPCUSTOMCOLOR -->
         <xs:simpleType>
           <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
@@ -235,7 +255,7 @@
       <xs:element name="NOSURFACE" type="BinaryFlag"/>
       <xs:element name="SHOWPINS" type="BinaryFlag"/>
       <xs:element name="SHOWDISTANCES" type="BinaryFlag"/>
-      <xs:element name="LINECOLOR">
+      <xs:element name="LINECOLOR"> <!-- colour code, see above; 6 = LINECUSTOMCOLOR -->
         <xs:simpleType>
           <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
@@ -245,7 +265,7 @@
       </xs:element>
       <xs:element name="LINECUSTOMCOLOR" type="HexColorType" minOccurs="0"/>
       <xs:element name="LINEWIDTH" type="LineWidthType"/>
-      <xs:element name="LINESTYLE">
+      <xs:element name="LINESTYLE"> <!-- style code, see above; exact in LINESTYLENAME -->
         <xs:simpleType>
           <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
@@ -253,7 +273,7 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-      <xs:element name="AREACOLOR">
+      <xs:element name="AREACOLOR"> <!-- colour code, see above; 6 = AREACUSTOMCOLOR -->
         <xs:simpleType>
           <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
@@ -339,7 +359,7 @@
       <xs:element name="SHOWNAME" type="BinaryFlag"/>
       <xs:element name="SHOWLABELBACKGROUND" type="BinaryFlag"/>
       <xs:element name="ICON" type="xs:integer"/>
-      <xs:element name="SPOTICONCOLOR">
+      <xs:element name="SPOTICONCOLOR"> <!-- colour code, see above; 6 = SPOTICONCUSTOMCOLOR -->
         <xs:simpleType>
           <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
@@ -373,9 +393,9 @@
       <xs:element name="NAME" type="xs:string"/>
       <xs:element name="IMAGEURL" type="xs:string" minOccurs="0"/>
       <xs:element name="OPACITY" type="OpacityType"/>
-      <xs:element name="LAT1" type="LatitudeType"/>
+      <xs:element name="LAT1" type="LatitudeType"/> <!-- north-west corner -->
       <xs:element name="LONG1" type="LongitudeType"/>
-      <xs:element name="LAT2" type="LatitudeType"/>
+      <xs:element name="LAT2" type="LatitudeType"/> <!-- south-east corner -->
       <xs:element name="LONG2" type="LongitudeType"/>
     </xs:all>
   </xs:complexType>
@@ -386,9 +406,9 @@
       <xs:element name="NAME" type="xs:string"/>
       <xs:element name="URL" type="xs:string"/>
       <xs:element name="OPACITY" type="OpacityType" minOccurs="0"/>
-      <xs:element name="LAT1" type="LatitudeType" minOccurs="0"/>
+      <xs:element name="LAT1" type="LatitudeType" minOccurs="0"/> <!-- north-west corner -->
       <xs:element name="LONG1" type="LongitudeType" minOccurs="0"/>
-      <xs:element name="LAT2" type="LatitudeType" minOccurs="0"/>
+      <xs:element name="LAT2" type="LatitudeType" minOccurs="0"/> <!-- south-east corner -->
       <xs:element name="LONG2" type="LongitudeType" minOccurs="0"/>
       <xs:element name="FEATURECOUNT" type="xs:integer" minOccurs="0"/>
     </xs:all>
