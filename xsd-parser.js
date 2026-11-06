@@ -60,16 +60,8 @@ function parseSimpleTypes(xsdDoc, schema) {
             rules.restrictions.enum = Array.from(enumerations).map(e => e.getAttribute('value'));
         }
 
-        // Parse min/max inclusive
-        const minInclusive = restriction.querySelector('minInclusive');
-        if (minInclusive) {
-            rules.restrictions.minInclusive = parseValue(minInclusive.getAttribute('value'), baseType);
-        }
-
-        const maxInclusive = restriction.querySelector('maxInclusive');
-        if (maxInclusive) {
-            rules.restrictions.maxInclusive = parseValue(maxInclusive.getAttribute('value'), baseType);
-        }
+        // Parse min/max, inclusive and exclusive
+        parseRangeFacets(restriction, baseType, rules.restrictions);
 
         // Parse pattern
         const pattern = restriction.querySelector('pattern');
@@ -127,16 +119,8 @@ function parseComplexTypes(xsdDoc, schema) {
                         inlineRules.restrictions.enum = Array.from(enums).map(e => e.getAttribute('value'));
                     }
 
-                    // Parse inline min/max
-                    const minInc = restriction.querySelector('minInclusive');
-                    if (minInc) {
-                        inlineRules.restrictions.minInclusive = parseValue(minInc.getAttribute('value'), baseType);
-                    }
-
-                    const maxInc = restriction.querySelector('maxInclusive');
-                    if (maxInc) {
-                        inlineRules.restrictions.maxInclusive = parseValue(maxInc.getAttribute('value'), baseType);
-                    }
+                    // Parse inline min/max, inclusive and exclusive
+                    parseRangeFacets(restriction, baseType, inlineRules.restrictions);
 
                     elements[elemName].inlineType = inlineRules;
                 }
@@ -245,16 +229,8 @@ function parseElementStructure(element) {
                         inlineRules.restrictions.enum = Array.from(enums).map(e => e.getAttribute('value'));
                     }
 
-                    // Parse inline min/max
-                    const minInc = restriction.querySelector('minInclusive');
-                    if (minInc) {
-                        inlineRules.restrictions.minInclusive = parseValue(minInc.getAttribute('value'), baseType);
-                    }
-
-                    const maxInc = restriction.querySelector('maxInclusive');
-                    if (maxInc) {
-                        inlineRules.restrictions.maxInclusive = parseValue(maxInc.getAttribute('value'), baseType);
-                    }
+                    // Parse inline min/max, inclusive and exclusive
+                    parseRangeFacets(restriction, baseType, inlineRules.restrictions);
 
                     // Parse inline pattern
                     const pattern = restriction.querySelector('pattern');
@@ -288,6 +264,18 @@ function parseValue(value, type) {
         return parseFloat(value);
     }
     return value;
+}
+
+/**
+ * The range facets of a restriction (min/max, inclusive and exclusive) into `restrictions`.
+ */
+function parseRangeFacets(restriction, baseType, restrictions) {
+    ['minInclusive', 'maxInclusive', 'minExclusive', 'maxExclusive'].forEach(facet => {
+        const node = restriction.querySelector(facet);
+        if (node) {
+            restrictions[facet] = parseValue(node.getAttribute('value'), baseType);
+        }
+    });
 }
 
 /**
@@ -499,6 +487,22 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
             errors.push({
                 type: 'Valor Fuera de Rango',
                 message: `${path}: El valor debe ser menor o igual a ${restrictions.maxInclusive}`,
+                location: `Valor actual: ${value}${locationStr}`
+            });
+        }
+
+        if (restrictions.minExclusive !== undefined && numValue <= restrictions.minExclusive) {
+            errors.push({
+                type: 'Valor Fuera de Rango',
+                message: `${path}: El valor debe ser mayor que ${restrictions.minExclusive}`,
+                location: `Valor actual: ${value}${locationStr}`
+            });
+        }
+
+        if (restrictions.maxExclusive !== undefined && numValue >= restrictions.maxExclusive) {
+            errors.push({
+                type: 'Valor Fuera de Rango',
+                message: `${path}: El valor debe ser menor que ${restrictions.maxExclusive}`,
                 location: `Valor actual: ${value}${locationStr}`
             });
         }
