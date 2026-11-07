@@ -300,7 +300,7 @@ function validateAgainstComplexType(element, typeName, schema, errors, path = ''
                 const locationStr = locationInfo ? ` (${locationInfo})` : '';
 
                 errors.push({
-                    type: 'Campo Requerido Faltante',
+                    type: 'Falta un campo obligatorio',
                     message: `${path}: Falta el campo requerido <${elemName}>`,
                     location: `${path}${locationStr}`
                 });
@@ -323,7 +323,7 @@ function validateAgainstComplexType(element, typeName, schema, errors, path = ''
                     const locationStr = locationInfo ? ` (${locationInfo})` : '';
 
                     errors.push({
-                        type: 'Valor Requerido Faltante',
+                        type: 'Falta un valor obligatorio',
                         message: `${childPath}: El campo <${elemName}> es obligatorio y no puede estar vacío`,
                         location: `${childPath}${locationStr}`
                     });
@@ -358,7 +358,7 @@ function validateAgainstComplexType(element, typeName, schema, errors, path = ''
                             const locationStr = locationInfo ? ` (${locationInfo})` : '';
 
                             errors.push({
-                                type: 'Campo Requerido Faltante',
+                                type: 'Falta un campo obligatorio',
                                 message: `${childPath}: Falta el campo requerido <${subElemName}>`,
                                 location: `${childPath}${locationStr}`
                             });
@@ -381,7 +381,7 @@ function validateAgainstComplexType(element, typeName, schema, errors, path = ''
                                 const locationStr = locationInfo ? ` (${locationInfo})` : '';
 
                                 errors.push({
-                                    type: 'Valor Requerido Faltante',
+                                    type: 'Falta un valor obligatorio',
                                     message: `${subChildPath}: El campo <${subElemName}> es obligatorio y no puede estar vacío`,
                                     location: `${subChildPath}${locationStr}`
                                 });
@@ -441,7 +441,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
             // Strict integer check
             if (!/^-?\d+$/.test(value)) {
                 errors.push({
-                    type: 'Tipo de Dato Inválido',
+                    type: 'Tipo de dato no válido',
                     message: `${path}: El valor debe ser un número entero válido`,
                     location: `Valor actual: ${value}${locationStr}`
                 });
@@ -451,7 +451,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
             // Strict float check
             if (!/^-?\d*(\.\d+)?$/.test(value) || value === '' || value === '.') {
                 errors.push({
-                    type: 'Tipo de Dato Inválido',
+                    type: 'Tipo de dato no válido',
                     message: `${path}: El valor debe ser un número decimal válido`,
                     location: `Valor actual: ${value}${locationStr}`
                 });
@@ -464,7 +464,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
     if (restrictions.enum) {
         if (!restrictions.enum.includes(value)) {
             errors.push({
-                type: 'Valor Inválido',
+                type: 'Valor no válido',
                 message: `${path}: El valor debe ser uno de: ${restrictions.enum.join(', ')}`,
                 location: `Valor actual: ${value}${locationStr}`
             });
@@ -477,7 +477,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
 
         if (restrictions.minInclusive !== undefined && numValue < restrictions.minInclusive) {
             errors.push({
-                type: 'Valor Fuera de Rango',
+                type: 'Valor fuera de rango',
                 message: `${path}: El valor debe ser mayor o igual a ${restrictions.minInclusive}`,
                 location: `Valor actual: ${value}${locationStr}`
             });
@@ -485,7 +485,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
 
         if (restrictions.maxInclusive !== undefined && numValue > restrictions.maxInclusive) {
             errors.push({
-                type: 'Valor Fuera de Rango',
+                type: 'Valor fuera de rango',
                 message: `${path}: El valor debe ser menor o igual a ${restrictions.maxInclusive}`,
                 location: `Valor actual: ${value}${locationStr}`
             });
@@ -493,7 +493,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
 
         if (restrictions.minExclusive !== undefined && numValue <= restrictions.minExclusive) {
             errors.push({
-                type: 'Valor Fuera de Rango',
+                type: 'Valor fuera de rango',
                 message: `${path}: El valor debe ser mayor que ${restrictions.minExclusive}`,
                 location: `Valor actual: ${value}${locationStr}`
             });
@@ -501,7 +501,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
 
         if (restrictions.maxExclusive !== undefined && numValue >= restrictions.maxExclusive) {
             errors.push({
-                type: 'Valor Fuera de Rango',
+                type: 'Valor fuera de rango',
                 message: `${path}: El valor debe ser menor que ${restrictions.maxExclusive}`,
                 location: `Valor actual: ${value}${locationStr}`
             });
@@ -514,7 +514,7 @@ function validateValue(value, typeRules, errors, path, fieldName, xmlString = nu
         const regex = new RegExp(anchoredPattern);
         if (!regex.test(value)) {
             errors.push({
-                type: 'Formato Inválido',
+                type: 'Formato no válido',
                 message: `${path}: El valor no cumple con el formato esperado`,
                 location: `Valor actual: ${value}, Patrón: ${restrictions.pattern}${locationStr}`
             });

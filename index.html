@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMP Validator - Validador de Documentos MMP</title>
-    <meta name="description" content="Valida online y gratis tus archivos .mmp (Measure Map) contra el esquema XSD oficial: polígonos, puntos, capas de imagen, grupos y estilos. Todo se procesa en tu navegador.">
-    <meta name="keywords" content="MMP, validador MMP, archivo .mmp, Measure Map, XSD, validación XML, esquema MMP, Blue Blink One">
+    <title>Validador de archivos .mmp | MMP Validator</title>
+    <meta name="description" content="Valida online y gratis tus archivos .mmp (Measure Map) contra el esquema XSD oficial: estructura, campos obligatorios, tipos y rangos, con la línea de cada error. Todo se procesa en tu navegador.">
+    <meta name="keywords" content="MMP, validador MMP, archivo .mmp, Measure Map, Measure Map Online, XSD, validación XML, esquema MMP, Blue Blink One">
     <meta name="author" content="Blue Blink One">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#4827EC">
+    <meta name="theme-color" content="#121217">
+    <meta name="color-scheme" content="dark">
     <meta name="application-name" content="MMP Validator">
     <meta name="generator" content="MMP Validator 1.1">
     <link rel="canonical" href="https://blueblinkone.github.io/mmp-validator/">
@@ -22,19 +23,19 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://blueblinkone.github.io/mmp-validator/">
     <meta property="og:site_name" content="MMP Validator">
-    <meta property="og:title" content="MMP Validator - Validador de Documentos MMP">
+    <meta property="og:title" content="Validador de archivos .mmp | MMP Validator">
     <meta property="og:description" content="Valida online y gratis tus archivos .mmp contra el esquema XSD oficial. Todo se procesa en tu navegador.">
     <meta property="og:locale" content="es_ES">
     <meta property="og:image" content="https://blueblinkone.github.io/mmp-validator/apple-touch-icon.png">
     <meta property="og:image:width" content="180">
     <meta property="og:image:height" content="180">
     <meta property="og:image:alt" content="Icono de MMP Validator">
-    <meta name="twitter:image" content="https://blueblinkone.github.io/mmp-validator/apple-touch-icon.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="MMP Validator - Validador de Documentos MMP">
+    <meta name="twitter:title" content="Validador de archivos .mmp | MMP Validator">
     <meta name="twitter:description" content="Valida online y gratis tus archivos .mmp contra el esquema XSD oficial.">
+    <meta name="twitter:image" content="https://blueblinkone.github.io/mmp-validator/apple-touch-icon.png">
 
     <!-- Datos estructurados -->
     <script type="application/ld+json">
@@ -52,171 +53,221 @@
         "inLanguage": "es",
         "isAccessibleForFree": true,
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
-        "author": { "@type": "Organization", "name": "Blue Blink One", "url": "https://blueblinkone.com" }
+        "author": { "@type": "Organization", "name": "Blue Blink One", "url": "https://blueblinkone.com" },
+        "mentions": {
+            "@type": "SoftwareApplication",
+            "name": "Measure Map Online",
+            "url": "https://measuremaponline.com",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web, iOS",
+            "author": { "@type": "Organization", "name": "Blue Blink One", "url": "https://blueblinkone.com" }
+        }
     }
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=26">
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="./" aria-label="MMP Validator, inicio">
+                <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="brandGradient" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#7056F0" />
+                            <stop offset="1" stop-color="#4827EC" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="64" height="64" rx="14" fill="url(#brandGradient)" />
+                    <circle cx="32" cy="32" r="20" fill="none" stroke="#fff" stroke-width="5" />
+                    <path d="M23 32.5L29 38.5L41 26.5" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <h1>MMP Validator</h1>
+                <span class="brand-name">MMP Validator</span>
+                <span class="version" title="Versión 1.1">v1.1</span>
+            </a>
+            <nav class="site-nav" aria-label="Secciones">
+                <a href="#comprobaciones">Qué comprueba</a>
+                <a href="#recursos">Recursos</a>
+                <a href="https://measuremaponline.com" target="_blank" rel="noopener">Measure Map Online</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <p class="eyebrow">Formato MMP · Esquema XSD oficial</p>
+            <h1>Valida tus archivos .mmp</h1>
+            <p class="lead">Comprueba que un proyecto .mmp cumple el esquema del formato antes de importarlo o compartirlo.
+                El validador detecta errores de estructura, campos obligatorios que faltan y valores fuera de rango, y te
+                indica dónde está cada uno.</p>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section" aria-label="Validar archivos">
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-zone-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V8L14 3Z"
+                            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                        <path d="M14 3V8H19" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                        <path d="M12 17V11M12 11L9.5 13.5M12 11L14.5 13.5" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h2 class="drop-zone-title">Arrastra aquí tus archivos .mmp</h2>
+                <p class="drop-zone-subtitle">o selecciónalos desde tu equipo. Puedes validar varios a la vez.</p>
+                <input type="file" id="fileInput" accept=".mmp,.xml" multiple hidden>
+                <div class="drop-zone-actions">
+                    <button class="btn btn-primary" id="selectFileBtn" type="button">Seleccionar archivos</button>
+                    <button class="btn btn-ghost" id="exampleBtn" type="button">Probar con un ejemplo</button>
+                </div>
             </div>
-            <div class="header-info">
-                <span class="version">v1.1</span>
+
+            <div class="notice" id="notice" role="status" hidden></div>
+
+            <!-- File List -->
+            <div class="panel file-list-container" id="fileListContainer" style="display: none;">
+                <div class="file-list-header">
+                    <h3 id="fileCount">0 archivos seleccionados</h3>
+                    <button class="btn btn-text" id="clearAllBtn" type="button">Quitar todos</button>
+                </div>
+                <div class="file-list" id="fileList">
+                    <!-- File items will be injected by JS -->
+                </div>
+                <button class="btn btn-primary btn-block" id="validateBtn" type="button">Validar archivos</button>
             </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Upload Section -->
-            <section class="upload-section">
-                <div class="upload-card" id="dropZone">
-                    <div class="upload-icon">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7 18C4.23858 18 2 15.7614 2 13C2 10.2386 4.23858 8 7 8C7.33333 5.33333 9.66667 3 13 3C16.3333 3 18.6667 5.33333 19 8C21.7614 8 24 10.2386 24 13C24 15.7614 21.7614 18 19 18H7Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12 12V21M12 12L9 15M12 12L15 15" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
+            <p class="privacy-note">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 11V8C8 5.79086 9.79086 4 12 4C14.2091 4 16 5.79086 16 8V11" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Los archivos se analizan en tu navegador y no se suben a ningún servidor.
+            </p>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;" aria-live="polite">
+            <div class="panel results-card">
+                <div class="results-header">
+                    <div class="status-icon" id="statusIcon">
+                        <!-- Icon will be injected by JS -->
                     </div>
-                    <h2 class="upload-title">Arrastra tus archivos .mmp aquí</h2>
-                    <p class="upload-subtitle">o usa el botón para seleccionar (puedes seleccionar varios)</p>
-                    <input type="file" id="fileInput" accept=".mmp,.xml" multiple hidden>
-                    <button class="btn-primary" id="selectFileBtn">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9 13H15M12 10V16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Seleccionar Archivos
-                    </button>
+                    <div class="results-title">
+                        <h2 id="resultsTitle">Resultados de la validación</h2>
+                        <p id="resultsSubtitle">Procesando...</p>
+                    </div>
                 </div>
 
-                <!-- File List -->
-                <div class="file-list-container" id="fileListContainer" style="display: none;">
-                    <div class="file-list-header">
-                        <h3 id="fileCount">0 archivos seleccionados</h3>
-                        <button class="btn-clear-all" id="clearAllBtn">
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            Limpiar todo
-                        </button>
-                    </div>
-                    <div class="file-list" id="fileList">
-                        <!-- File items will be injected by JS -->
-                    </div>
-                    <button class="btn-validate" id="validateBtn">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Validar Todos
-                    </button>
+                <div class="results-body" id="resultsBody">
+                    <!-- Results will be injected by JS -->
                 </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-secondary" id="resetBtn" type="button">Validar otros archivos</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- What it checks -->
+        <section class="section" id="comprobaciones" aria-labelledby="checksTitle">
+            <h2 class="section-title" id="checksTitle">Qué comprueba</h2>
+            <p class="section-lead">Cada archivo se contrasta con <a href="mmp.xsd">mmp.xsd</a>, el esquema que define el
+                formato: polígonos, puntos, capas de imagen, grupos y estilos.</p>
+            <div class="check-grid">
+                <article class="check-card">
+                    <h3>Estructura XML</h3>
+                    <p>XML bien formado, etiquetas cerradas y elemento raíz correcto.</p>
+                </article>
+                <article class="check-card">
+                    <h3>Elementos del formato</h3>
+                    <p>Elementos desconocidos y campos obligatorios que faltan o están vacíos.</p>
+                </article>
+                <article class="check-card">
+                    <h3>Tipos y rangos</h3>
+                    <p>Latitudes y longitudes, números, valores 0/1, colores hexadecimales y valores permitidos.</p>
+                </article>
+                <article class="check-card">
+                    <h3>Ubicación de cada error</h3>
+                    <p>La ruta del elemento, el valor encontrado y la línea del archivo donde aparece.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Resources & Measure Map Online -->
+        <div class="split">
+            <section class="section panel" id="recursos" aria-labelledby="resourcesTitle">
+                <h2 class="section-title" id="resourcesTitle">Recursos</h2>
+                <ul class="resource-list">
+                    <li>
+                        <a href="mmp.xsd" download>
+                            <span class="resource-name">Esquema XSD <code>mmp.xsd</code></span>
+                            <span class="resource-desc">La definición completa del formato, con tipos y rangos.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mmp.dtd" download>
+                            <span class="resource-name">DTD <code>mmp.dtd</code></span>
+                            <span class="resource-desc">Versión simplificada: no comprueba tipos ni rangos.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Full.mmp" download>
+                            <span class="resource-name">Archivo de ejemplo <code>Full.mmp</code></span>
+                            <span class="resource-desc">Un proyecto completo y válido para tomar como referencia.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/blueblinkone/mmp-validator" target="_blank" rel="noopener">
+                            <span class="resource-name">Código fuente en GitHub</span>
+                            <span class="resource-desc">El validador, el esquema y los archivos de prueba.</span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="tip">Para que tu editor valide un archivo mientras lo escribes, enlaza el esquema en el elemento raíz:</p>
+                <pre class="code"><code>xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/blueblinkone/mmp-validator/refs/heads/main/mmp.xsd"</code></pre>
             </section>
 
-            <!-- Results Section -->
-            <section class="results-section" id="resultsSection" style="display: none;">
-                <div class="results-card">
-                    <div class="results-header">
-                        <div class="status-icon" id="statusIcon">
-                            <!-- Icon will be injected by JS -->
-                        </div>
-                        <div class="results-title">
-                            <h2 id="resultsTitle">Resultados de Validación</h2>
-                            <p id="resultsSubtitle">Procesando...</p>
-                        </div>
-                    </div>
-
-                    <div class="results-body" id="resultsBody">
-                        <!-- Results will be injected by JS -->
-                    </div>
-
-                    <div class="results-actions">
-                        <button class="btn-secondary" id="resetBtn">
-                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M4 4V9H4.58152M19.9381 11C19.446 7.05369 16.0796 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9M4.58152 9H9M20 20V15H19.4185M19.4185 15C18.2317 17.9318 15.3574 20 12 20C7.92038 20 4.55399 16.9463 4.06189 13M19.4185 15H15"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </svg>
-                            Validar otro archivo
-                        </button>
-                    </div>
-                </div>
+            <!-- Measure Map Online -->
+            <section class="section panel mmo-card" aria-labelledby="mmoTitle">
+                <h2 class="section-title" id="mmoTitle">Measure Map Online</h2>
+                <p>Los archivos .mmp son el formato de <strong>Measure Map Online</strong>, la herramienta de medición en
+                    la nube y multiplataforma de Blue Blink One.</p>
+                <ul class="feature-list">
+                    <li>Mide áreas, distancias y puntos sobre el mapa.</li>
+                    <li>Crea y comparte proyectos, y trabaja en tiempo real con tu equipo.</li>
+                    <li>Importa y exporta tus proyectos en formato .mmp.</li>
+                </ul>
+                <a href="https://measuremaponline.com" target="_blank" rel="noopener" class="btn btn-secondary">
+                    Ir a Measure Map Online
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M14 5H19V10M19 5L11 13M10 6H7C5.89543 6 5 6.89543 5 8V17C5 18.1046 5.89543 19 7 19H16C17.1046 19 18 18.1046 18 17V14"
+                            stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
             </section>
+        </div>
+    </main>
 
-            <!-- Schema Info -->
-            <section class="schema-info">
-                <div class="info-card">
-                    <h3>
-                        <svg class="info-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M12 16V12M12 8H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Acerca del Validador
-                    </h3>
-                    <p>Este validador verifica que tus documentos .mmp cumplan con el esquema XSD definido. Soporta:</p>
-                    <ul class="feature-list">
-                        <li>
-                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </svg>
-                            Polígonos, puntos y capas de imagen
-                        </li>
-                        <li>
-                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </svg>
-                            Grupos y configuraciones de estilo
-                        </li>
-                        <li>
-                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </svg>
-                            Validación completa de tipos y restricciones
-                        </li>
-                    </ul>
-                    <a href="mmp.xsd" download class="btn-download">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M7 10L12 15M12 15L17 10M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Descargar Esquema XSD
-                    </a>
-                </div>
-            </section>
-        </main>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; 2025–2026 <a href="https://blueblinkone.com" target="_blank" rel="noopener">Blue Blink One</a>. MMP Validator v1.1.</p>
+            <nav aria-label="Enlaces">
+                <a href="https://measuremaponline.com" target="_blank" rel="noopener">Measure Map Online</a>
+                <a href="https://github.com/blueblinkone/mmp-validator" target="_blank" rel="noopener">GitHub</a>
+            </nav>
+        </div>
+    </footer>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>&copy; 2025 MMP Validator. Validación profesional de documentos MMP.</p>
-            <p class="developer-credit">Desarrollado por <a href="https://blueblinkone.com" target="_blank" rel="noopener noreferrer"><strong>Blue Blink One</strong></a></p>
-        </footer>
-    </div>
-
-    <script src="xsd-parser.js?v=25"></script>
-    <script src="validator.js?v=25"></script>
+    <script src="xsd-parser.js?v=26"></script>
+    <script src="validator.js?v=26"></script>
 </body>
 
 </html>

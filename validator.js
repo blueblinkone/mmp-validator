@@ -57,7 +57,7 @@ async function loadXSDSchema() {
       }
     } catch (xhrError) {
       console.error('Error con XMLHttpRequest:', xhrError);
-      alert('Error: No se pudo cargar el esquema XSD (mmp.xsd).\n\nAsegúrate de que:\n1. El archivo mmp.xsd existe en el mismo directorio\n2. Estás abriendo index.html desde un servidor web local\n\nPara desarrollo local, usa un servidor como:\n- python -m http.server 8000\n- npx serve\n- Live Server (extensión de VS Code)');
+      showNotice('No se ha podido cargar el esquema (mmp.xsd). Si abres la página como archivo local, sírvela desde un servidor web, por ejemplo con «python3 -m http.server».', 'error');
     }
   }
 }
@@ -110,6 +110,41 @@ clearAllBtn.addEventListener('click', clearAllFiles);
 
 // Validate
 validateBtn.addEventListener('click', validateFile);
+
+// Try with the bundled example file
+const exampleBtn = document.getElementById('exampleBtn');
+if (exampleBtn) {
+  exampleBtn.addEventListener('click', async () => {
+    exampleBtn.disabled = true;
+    try {
+      const response = await fetch('Full.mmp');
+      if (!response.ok) throw new Error(response.statusText);
+      const blob = await response.blob();
+      addFiles([new File([blob], 'Full.mmp', { type: 'application/xml' })]);
+    } catch (error) {
+      showNotice('No se ha podido cargar el archivo de ejemplo.', 'error');
+    } finally {
+      exampleBtn.disabled = false;
+    }
+  });
+}
+
+/**
+ * Show a message above the file list (instead of an alert dialog).
+ * type: 'warning' (default) or 'error'.
+ */
+function showNotice(message, type = 'warning') {
+  const notice = document.getElementById('notice');
+  if (!notice) return;
+  notice.textContent = message;
+  notice.className = `notice ${type}`;
+  notice.hidden = false;
+}
+
+function hideNotice() {
+  const notice = document.getElementById('notice');
+  if (notice) notice.hidden = true;
+}
 
 // Reset
 if (resetBtn) {
@@ -184,7 +219,11 @@ function addFiles(newFiles) {
   }
 
   if (invalidCount > 0) {
-    alert(`${invalidCount} archivo(s) ignorado(s). Solo se aceptan archivos .mmp o .xml`);
+    showNotice(invalidCount === 1
+      ? 'Se ha ignorado 1 archivo: solo se aceptan archivos .mmp o .xml.'
+      : `Se han ignorado ${invalidCount} archivos: solo se aceptan archivos .mmp o .xml.`);
+  } else {
+    hideNotice();
   }
 
   updateFileListUI();
@@ -198,6 +237,7 @@ function removeFile(index) {
 function clearAllFiles() {
   files = [];
   fileInput.value = '';
+  hideNotice();
   updateFileListUI();
 }
 
@@ -222,12 +262,12 @@ function updateFileListUI() {
         <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M13 2V9H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <div class="file-details ${item.status === 'invalid' ? 'clickable' : ''}" onclick="${item.status === 'invalid' ? `scrollToFileErrors(${index})` : ''}">
+      <div class="file-details ${item.status === 'invalid' ? 'clickable' : ''}" onclick="${item.status === 'invalid' ? `scrollToFileErrors(${index})` : ''}"${item.status === 'invalid' ? ' title="Ver los errores"' : ''}>
         <h4>${escapeHtml(item.file.name)}</h4>
         <span>${formatFileSize(item.file.size)}</span>
       </div>
       <span class="file-status ${item.status}">${getStatusText(item.status)}</span>
-      <button class="btn-remove-file" onclick="removeFile(${index})">
+      <button class="btn-remove-file" type="button" onclick="removeFile(${index})" aria-label="Quitar ${escapeHtml(item.file.name)}" title="Quitar">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -239,9 +279,9 @@ function updateFileListUI() {
 function getStatusText(status) {
   switch (status) {
     case 'pending': return 'Pendiente';
-    case 'validating': return 'Validando...';
-    case 'valid': return '✓ Válido';
-    case 'invalid': return '✗ Inválido';
+    case 'validating': return 'Validando…';
+    case 'valid': return 'Válido';
+    case 'invalid': return 'Con errores';
     default: return status;
   }
 }
@@ -273,7 +313,7 @@ async function validateFile() {
 
   // Check if XSD schema is loaded
   if (!XSD_SCHEMA) {
-    alert('El esquema XSD aún no se ha cargado. Por favor, espera un momento e intenta de nuevo.');
+    showNotice('El esquema todavía se está cargando. Vuelve a intentarlo en unos segundos.');
     return;
   }
 
@@ -293,7 +333,7 @@ async function validateFile() {
       files[i].status = errors.length === 0 ? 'valid' : 'invalid';
     } catch (error) {
       files[i].errors = [{
-        type: 'Error de Lectura',
+        type: 'Error de lectura',
         message: error.message,
         location: null
       }];
@@ -335,7 +375,7 @@ function validateXMLAgainstSchema(xmlString) {
     const parserError = xmlDoc.querySelector('parsererror');
     if (parserError) {
       errors.push({
-        type: 'Error de Sintaxis XML',
+        type: 'Error de sintaxis XML',
         message: 'El documento XML no está bien formado',
         location: parserError.textContent
       });
@@ -348,7 +388,7 @@ function validateXMLAgainstSchema(xmlString) {
 
   } catch (error) {
     errors.push({
-      type: 'Error de Validación',
+      type: 'Error de validación',
       message: error.message,
       location: null
     });
@@ -391,7 +431,7 @@ function checkXMLWellFormedness(xmlString) {
     if (fullTag.startsWith('</')) {
       if (stack.length === 0) {
         errors.push({
-          type: 'Error de Estructura XML',
+          type: 'Error de estructura XML',
           message: `Etiqueta de cierre sin apertura: </${tagName}>`,
           location: `Posición: ${position}`
         });
@@ -399,7 +439,7 @@ function checkXMLWellFormedness(xmlString) {
         const lastOpened = stack.pop();
         if (lastOpened.name !== tagName) {
           errors.push({
-            type: 'Error de Estructura XML',
+            type: 'Error de estructura XML',
             message: `Etiquetas no coinciden: se esperaba </${lastOpened.name}> pero se encontró </${tagName}>`,
             location: `Línea aproximada: ${getLineNumber(xmlString, position)}`
           });
@@ -415,7 +455,7 @@ function checkXMLWellFormedness(xmlString) {
   if (stack.length > 0) {
     stack.forEach(tag => {
       errors.push({
-        type: 'Error de Estructura XML',
+        type: 'Error de estructura XML',
         message: `Etiqueta sin cerrar: <${tag.name}>`,
         location: `Línea aproximada: ${getLineNumber(xmlString, tag.position)}`
       });
@@ -437,7 +477,7 @@ function validateStructure(xmlDoc, xmlString) {
 
   if (!PARSED_SCHEMA) {
     errors.push({
-      type: 'Error del Sistema',
+      type: 'Error del sistema',
       message: 'El esquema XSD no ha sido parseado correctamente',
       location: null
     });
@@ -450,7 +490,7 @@ function validateStructure(xmlDoc, xmlString) {
 
   if (root.nodeName !== expectedRoot) {
     errors.push({
-      type: 'Error de Estructura',
+      type: 'Error de estructura',
       message: `El elemento raíz debe ser <${expectedRoot}>`,
       location: `Encontrado: <${root.nodeName}>`
     });
@@ -496,7 +536,7 @@ function validateNoUnknownElements(root, schema, errors) {
     const tagName = element.tagName;
     if (!knownElements.has(tagName)) {
       errors.push({
-        type: 'Elemento Desconocido',
+        type: 'Elemento desconocido',
         message: `El elemento <${tagName}> no está definido en el esquema`,
         location: getElementPath(element)
       });
@@ -567,7 +607,7 @@ function validateElementDynamic(element, elementName, schema, errors, path = '',
         }
 
         errors.push({
-          type: 'Campo Requerido Faltante',
+          type: 'Falta un campo obligatorio',
           message: `${path}: Falta el elemento requerido <${childName}>`,
           location: `${path}${locationStr}`
         });
@@ -596,7 +636,7 @@ function validateElementDynamic(element, elementName, schema, errors, path = '',
               }
 
               errors.push({
-                type: 'Valor Requerido Faltante',
+                type: 'Falta un valor obligatorio',
                 message: `${childPath}: El campo <${childName}> es obligatorio y no puede estar vacío`,
                 location: `${childPath}${locationStr}`
               });
@@ -618,7 +658,7 @@ function validateElementDynamic(element, elementName, schema, errors, path = '',
               }
 
               errors.push({
-                type: 'Valor Requerido Faltante',
+                type: 'Falta un valor obligatorio',
                 message: `${childPath}: El campo <${childName}> es obligatorio y no puede estar vacío`,
                 location: `${childPath}${locationStr}`
               });
@@ -675,7 +715,7 @@ function validateInlineStructure(element, structure, schema, errors, path, xmlSt
         }
 
         errors.push({
-          type: 'Campo Requerido Faltante',
+          type: 'Falta un campo obligatorio',
           message: `${path}: Falta el campo requerido <${elemName}>`,
           location: `${path}${locationStr}`
         });
@@ -701,7 +741,7 @@ function validateInlineStructure(element, structure, schema, errors, path, xmlSt
           }
 
           errors.push({
-            type: 'Valor Requerido Faltante',
+            type: 'Falta un valor obligatorio',
             message: `${childPath}: El campo <${elemName}> es obligatorio y no puede estar vacío`,
             location: `${childPath}${locationStr}`
           });
@@ -797,8 +837,9 @@ function isValidHexColor(value) {
 
 function showLoadingResults() {
   resultsSection.style.display = 'block';
+  statusIcon.className = 'status-icon';
   statusIcon.innerHTML = '<div class="loading"></div>';
-  resultsTitle.textContent = 'Validando...';
+  resultsTitle.textContent = 'Validando…';
   resultsSubtitle.textContent = `Procesando ${files.length} archivo${files.length !== 1 ? 's' : ''}`;
   resultsBody.innerHTML = '';
 
@@ -821,13 +862,11 @@ function showCombinedResults() {
         <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     `;
-    resultsTitle.textContent = '¡Validación Exitosa!';
-    resultsSubtitle.textContent = `${validFiles.length} archivo${validFiles.length !== 1 ? 's' : ''} válido${validFiles.length !== 1 ? 's' : ''}`;
+    resultsTitle.textContent = validFiles.length === 1 ? 'El archivo es válido' : 'Todos los archivos son válidos';
+    resultsSubtitle.textContent = `${validFiles.length} archivo${validFiles.length !== 1 ? 's' : ''} sin errores`;
     resultsBody.innerHTML = `
       <div class="success-message">
-        <p style="margin: 0; font-size: 1rem;">
-          ✓ Todos los archivos son válidos y cumplen con las especificaciones del esquema XSD.
-        </p>
+        ${validFiles.length === 1 ? 'Cumple' : 'Cumplen'} el esquema del formato MMP (mmp.xsd): la estructura, los campos obligatorios, los tipos y los rangos son correctos.
       </div>
     `;
   } else {
@@ -838,8 +877,9 @@ function showCombinedResults() {
         <path d="M12 9V11M12 15H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     `;
-    resultsTitle.textContent = 'Errores de Validación';
-    resultsSubtitle.textContent = `${invalidFiles.length} archivo${invalidFiles.length !== 1 ? 's' : ''} con errores, ${validFiles.length} válido${validFiles.length !== 1 ? 's' : ''}`;
+    resultsTitle.textContent = 'Se han encontrado errores';
+    resultsSubtitle.textContent = `${invalidFiles.length} archivo${invalidFiles.length !== 1 ? 's' : ''} con errores` +
+      (validFiles.length > 0 ? `, ${validFiles.length} válido${validFiles.length !== 1 ? 's' : ''}` : '');
 
     // Build results HTML grouped by file
     let resultsHtml = '<div class="error-list">';
